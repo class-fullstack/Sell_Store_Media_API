@@ -5,16 +5,13 @@ const express = require("express");
 const mediaController = require("../../controllers/media.controller");
 const { asyncHandler } = require("../../../../commons/helpers/asyncHandler");
 const { uploadMemory } = require("../../../../commons/configs/multer.config");
-const {
-  MAX_MEDIA,
-  MAX_UPLOAD_MULTIPLE,
-} = require("../../../../commons/constants");
+const { MAX_MEDIA, KEY_UPLOAD } = require("../../../../commons/constants");
 
 const router = express.Router();
 
 router.post(
   "/upload-single",
-  uploadMemory.single("image", MAX_MEDIA),
+  uploadMemory.single(KEY_UPLOAD.SINGLE, MAX_MEDIA),
   asyncHandler(mediaController.uploadSingle)
 );
 

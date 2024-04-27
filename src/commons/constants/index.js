@@ -13,10 +13,13 @@ const TIME = {
   _3_MINUTE: 3 * 60,
 };
 
-const S3_BUCKET = "taidev";
+const S3_BUCKET = "sell-store";
 const MAX_MEDIA = 1;
 const MAX_UPLOAD_MULTIPLE = 10;
 const MAX_AGE = 3600;
+const KEY_UPLOAD = {
+  SINGLE: "image-single",
+};
 
 module.exports = {
   NODE_ENV,
@@ -26,4 +29,5 @@ module.exports = {
   MAX_MEDIA,
   MAX_AGE,
   MAX_UPLOAD_MULTIPLE,
+  KEY_UPLOAD,
 };

@@ -3,35 +3,31 @@ const crypto = require("crypto");
 //* REQUIRE
 const awsBucket = require("../../../dbs/init.minio");
 const { S3_BUCKET } = require("../../../commons/constants");
+const ValidationMedia = require("../../../commons/helpers/validatehandle");
 
 class MediaService {
   async uploadSingle(req) {
-    try {
-      const buffer = req?.file?.buffer;
-      const mime = req?.file?.mimetype;
-      const ContentType = { ContentType: mime };
+    //* 1. Get data for file upload
+    const { buffer, mimetype, originalname } = req.file;
 
-      const originalFileName = req.file.originalname;
-      const hash = crypto
-        .createHash("md5")
-        .update(originalFileName)
-        .digest("hex");
-      const key = hash + "_" + originalFileName;
+    //* 2.  Validate data for file upload
+    ValidationMedia.validateFields({ buffer, mimetype, originalname });
 
-      const params = {
-        Bucket: S3_BUCKET,
-        Key: key,
-        Body: buffer,
-        ...ContentType,
-      };
+    const ContentType = { ContentType: mimetype };
 
-      const data = await awsBucket.putObject(params).promise();
-      console.info(`upload success ${JSON.stringify(data)}`);
-      return data;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      throw error;
-    }
+    const hash = crypto.createHash("md5").update(originalname).digest("hex");
+    const key = hash + "_" + originalname;
+
+    const params = {
+      Bucket: S3_BUCKET,
+      Key: key,
+      Body: buffer,
+      ...ContentType,
+    };
+
+    const data = await awsBucket.putObject(params).promise();
+    console.info(`upload success ${JSON.stringify(data)}`);
+    return data;
   }
 }
 
