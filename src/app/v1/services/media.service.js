@@ -10,6 +10,7 @@ const {
   TEMPLATE,
   TIME,
   MAX_AGE,
+  TYPE,
 } = require("../../../commons/constants");
 const ValidationMedia = require("../../../commons/helpers/validatehandle");
 const {
@@ -24,7 +25,7 @@ class MediaService {
   async uploadSingle(req) {
     //* 1. Get data for file upload
     const { buffer, mimetype, originalname, size, fieldname } = req.file;
-    const { width, height } = req.body;
+    const { width, height, watermark, text } = req.body;
     const { user_id } = req.infoAccessToken;
 
     //* 2.  Validate data for file upload
@@ -92,6 +93,8 @@ class MediaService {
       mimetype,
       width: Number(width),
       height: Number(height),
+      watermark,
+      text,
     });
 
     //* 10. Upload file to S3
@@ -145,42 +148,54 @@ class MediaService {
     return canvas.toBuffer();
   }
 
-  async processImage({ buffer, mimetype, width = 800, height = 600 }) {
-    let resizedBuffer, processedBuffer;
+  async processImage({
+    buffer,
+    mimetype,
+    width = 800,
+    height = 600,
+    watermark = TYPE.TRUE,
+    text,
+  }) {
+    let processedBuffer, textBuffer;
     if (_.includes(["image/jpeg", "image/png"], mimetype)) {
       //* 1. Resize image to 800x600 pixels
-      resizedBuffer = await sharp(buffer)
+      processedBuffer = await sharp(buffer)
         .resize({ width: width, height: height })
         .toBuffer();
 
-      //* 2. Draw watermark into image
-      const textBuffer = await this.createTextImage({
-        text: "Nguyen Tien Tai",
-        font: "Arial",
-        fontSize: 24,
-        textColor: "rgba(255, 255, 255, 0.7)",
-        canvasWidth: width,
-        canvasHeight: height,
-      });
-
-      //*  3. Watermark into image
-      processedBuffer = await sharp(resizedBuffer)
-        .composite([{ input: textBuffer, gravity: "southeast" }])
-        .toBuffer();
+      //* 2.  Check if want watermark into image
+      if (watermark === TYPE.TRUE && text) {
+        //* 1. Draw watermark into image
+        textBuffer = await this.createTextImage({
+          text: text || "Nguyen Tien Tai",
+          font: "Arial",
+          fontSize: 20,
+          textColor: "rgba(255, 255, 255, 0.7)",
+          canvasWidth: width,
+          canvasHeight: height,
+        });
+        //* 2. Watermark into image
+        processedBuffer = await sharp(processedBuffer)
+          .composite([{ input: textBuffer, gravity: "southeast" }])
+          .toBuffer();
+      }
     } else {
-      //* 4. If deference image return buffer
+      //* 3. If deference image return buffer
       processedBuffer = buffer;
     }
     return processedBuffer;
   }
 
   async getSignedUrlPromise({ s3Bucket, urlPath }) {
+    //* 1. Params of image
     const urlParams = {
       Bucket: s3Bucket,
       Key: urlPath,
       ResponseCacheControl: `max-age=${MAX_AGE}`,
       Expires: TIME._10_MINUTE,
     };
+
+    //* 2. Get link url of image
     return await MediaRepository.getSignedUrlPromise(urlParams);
   }
 }

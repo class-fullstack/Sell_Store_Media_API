@@ -54,6 +54,11 @@ const VALIDATE = {
   TOKEN_EXPIRY: "token_exp_expires",
 };
 
+const TYPE = {
+  TRUE: "1",
+  false: "2",
+};
+
 module.exports = {
   NODE_ENV,
   LIMIT_BODY,
@@ -69,4 +74,5 @@ module.exports = {
   ROLE_TYPE,
   TABLES,
   VALIDATE,
+  TYPE,
 };
