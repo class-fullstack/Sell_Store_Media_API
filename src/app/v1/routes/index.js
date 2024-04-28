@@ -6,8 +6,11 @@ const {
   ReasonPhrases,
   StatusCodes,
 } = require("../../../commons/utils/httpStatusCode");
-
+const HeaderMiddleware = require("../../../middlewares/headers.middleware");
 const router = express.Router();
+
+//* Get all headers
+router.use(HeaderMiddleware.getHeaders);
 
 router.use("/media", require("./media"));
 

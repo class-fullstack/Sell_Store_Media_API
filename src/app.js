@@ -33,6 +33,9 @@ app.use(
   })
 );
 
+//* PG
+require("./dbs/init.knex").initDatabase();
+
 // * V1
 app.use("/api/v1", require("./app/v1/routes"));
 

@@ -13,12 +13,43 @@ const TIME = {
   _3_MINUTE: 3 * 60,
 };
 
-const S3_BUCKET = "sell-store";
+const S3_BUCKET = {
+  IMAGE: "sell-store",
+  VIDEO: "sell-store-video",
+};
 const MAX_MEDIA = 1;
 const MAX_UPLOAD_MULTIPLE = 10;
 const MAX_AGE = 3600;
 const KEY_UPLOAD = {
   SINGLE: "image-single",
+};
+
+const FILE = {
+  IMAGE: "image",
+  VIDEO: "video",
+};
+
+const TEMPLATE = {
+  IMAGE: "${media_id}/${user_id}/${time}-${file_name}",
+  VIDEO: "${media_id}/${user_id}/${time}-${file_name}",
+};
+
+const MEDIA_TYPE = /jpeg|jpg|png|gif|mp3|mp4/;
+
+const ROLE_TYPE = {
+  ADMIN: 10,
+  USER: 20,
+  STAFF: 30,
+};
+
+const TABLES = {
+  USER_TRACKING: "user_tracking",
+};
+
+const VALIDATE = {
+  IS_EMPTY: "is_empty",
+  HAD_EXPIRY: "had_expires",
+  TOKEN_EXPIRY: "token_exp_expires",
 };
 
 module.exports = {
@@ -30,4 +61,10 @@ module.exports = {
   MAX_AGE,
   MAX_UPLOAD_MULTIPLE,
   KEY_UPLOAD,
+  FILE,
+  TEMPLATE,
+  MEDIA_TYPE,
+  ROLE_TYPE,
+  TABLES,
+  VALIDATE,
 };
