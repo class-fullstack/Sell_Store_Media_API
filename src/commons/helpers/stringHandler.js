@@ -15,7 +15,16 @@ const parseMimeType = (mimeType) => {
   return { type, extension };
 };
 
+const convertMetadataToString = (metadata) => {
+  let convertedMetadata = {};
+  _.forOwn(metadata, (value, key) => {
+    convertedMetadata[key] = _.isNil(value) ? "" : value.toString();
+  });
+  return convertedMetadata;
+};
+
 module.exports = {
   getURIFromTemplate,
   parseMimeType,
+  convertMetadataToString,
 };

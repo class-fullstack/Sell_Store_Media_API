@@ -1,6 +1,6 @@
 const NODE_ENV = {
-  DEV: "dev",
-  PRO: "pro",
+  DEV: "DEV",
+  PRO: "PRO",
 };
 
 const LIMIT_BODY = {
@@ -9,8 +9,9 @@ const LIMIT_BODY = {
 
 const TIME = {
   _15_SECOND: 15 * 1000,
-  _1_MINUTE: 60,
-  _3_MINUTE: 3 * 60,
+  _1_MINUTE: 60 * 1000,
+  _3_MINUTE: 3 * 60 * 1000,
+  _10_MINUTE: 10 * 60 * 1000,
 };
 
 const S3_BUCKET = {
@@ -32,6 +33,7 @@ const FILE = {
 const TEMPLATE = {
   IMAGE: "${media_id}/${user_id}/${time}-${file_name}",
   VIDEO: "${media_id}/${user_id}/${time}-${file_name}",
+  STORAGE: "data/${user_id}/origin/${file_name}",
 };
 
 const MEDIA_TYPE = /jpeg|jpg|png|gif|mp3|mp4/;

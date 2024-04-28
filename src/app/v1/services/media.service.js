@@ -1,16 +1,24 @@
 //* LIB
-const mime = require("mime");
+const sharp = require("sharp");
+const { createCanvas } = require("canvas");
+const _ = require("lodash");
 
 //* REQUIRE
-const awsBucket = require("../../../dbs/init.minio");
-const { S3_BUCKET, FILE, TEMPLATE } = require("../../../commons/constants");
+const {
+  S3_BUCKET,
+  FILE,
+  TEMPLATE,
+  TIME,
+  MAX_AGE,
+} = require("../../../commons/constants");
 const ValidationMedia = require("../../../commons/helpers/validatehandle");
-const { BadRequestRequestError } = require("../../../cores/error.response");
 const {
   parseMimeType,
   getURIFromTemplate,
+  convertMetadataToString,
 } = require("../../../commons/helpers/stringHandler");
 const { randomMediaId } = require("../../../commons/helpers/randomHandler");
+const MediaRepository = require("../../v1/models/repositories/media.repo");
 
 class MediaService {
   async uploadSingle(req) {
@@ -54,15 +62,18 @@ class MediaService {
     const mediaId = randomMediaId({ originalname, type });
 
     //* 6. Add link template
-    let date = new Date().getTime();
+    const date = new Date().getTime();
+    const time = date.toString();
 
+    //* 7. Create path folder save
     const urlPath = getURIFromTemplate(templateUpload, {
       media_id: mediaId,
       user_id,
-      time: date,
+      time: time,
       file_name: fieldname,
     });
 
+    //* 8. Created metadata object
     const metadata = {
       userId: user_id,
       time: date,
@@ -75,18 +86,102 @@ class MediaService {
       fileExtension: extension,
     };
 
-    // const params = {
-    //   Bucket: S3_BUCKET.IMAGE,
-    //   Key: key,
-    //   Body: buffer,
-    //   ...ContentType,
-    // };
+    //* 9. Handle image before save S3
+    const processedBuffer = await this.processImage({
+      buffer,
+      mimetype,
+      width: Number(width),
+      height: Number(height),
+    });
 
-    return urlPath;
+    //* 10. Upload file to S3
+    const params = {
+      Bucket: s3Bucket,
+      Key: urlPath,
+      Expires: TIME._10_MINUTE,
+      Body: processedBuffer,
+      Metadata: convertMetadataToString(metadata),
+      ContentType: mimetype,
+    };
+    const resultData = await MediaRepository.putObject(params);
 
-    // const data = await awsBucket.putObject(params).promise();
-    // console.info(`upload success ${JSON.stringify(data)}`);
-    // return data;
+    console.info(`upload success ${JSON.stringify(resultData)}`);
+    return {
+      upload_mime: mimetype,
+      upload_name: fieldname,
+      upload_url: await this.getSignedUrlPromise({ s3Bucket, urlPath }),
+      upload_id: getURIFromTemplate(TEMPLATE.STORAGE, {
+        user_id,
+        file_name: encodeURIComponent(fieldname),
+      }),
+    };
+  }
+
+  async createTextImage({
+    text = "Nguyen Tien Tai",
+    font,
+    fontSize,
+    textColor,
+    canvasWidth,
+    canvasHeight,
+  }) {
+    const canvas = createCanvas(canvasWidth, canvasHeight);
+    const ctx = canvas.getContext("2d");
+
+    // Đặt font và kích thước
+    //* 1. Set font and size
+    ctx.font = `${fontSize}px ${font}`;
+    ctx.fillStyle = textColor;
+
+    //* 2. Measure size of word
+    const textMetrics = ctx.measureText(text);
+    const textWidth = textMetrics.width;
+    const textHeight = fontSize;
+
+    //* 3. Draw text to the canvas in the bottom left corner
+    ctx.fillText(text, canvasWidth - textWidth, canvasHeight - textHeight);
+
+    //* 4. convert canvas to buffer
+    return canvas.toBuffer();
+  }
+
+  async processImage({ buffer, mimetype, width = 800, height = 600 }) {
+    let resizedBuffer, processedBuffer;
+    if (_.includes(["image/jpeg", "image/png"], mimetype)) {
+      //* 1. Resize image to 800x600 pixels
+      resizedBuffer = await sharp(buffer)
+        .resize({ width: width, height: height })
+        .toBuffer();
+
+      //* 2. Draw watermark into image
+      const textBuffer = await this.createTextImage({
+        text: "Nguyen Tien Tai",
+        font: "Arial",
+        fontSize: 24,
+        textColor: "rgba(255, 255, 255, 0.7)",
+        canvasWidth: width,
+        canvasHeight: height,
+      });
+
+      //*  3. Watermark into image
+      processedBuffer = await sharp(resizedBuffer)
+        .composite([{ input: textBuffer, gravity: "southeast" }])
+        .toBuffer();
+    } else {
+      //* 4. If deference image return buffer
+      processedBuffer = buffer;
+    }
+    return processedBuffer;
+  }
+
+  async getSignedUrlPromise({ s3Bucket, urlPath }) {
+    const urlParams = {
+      Bucket: s3Bucket,
+      Key: urlPath,
+      ResponseCacheControl: `max-age=${MAX_AGE}`,
+      Expires: TIME._10_MINUTE,
+    };
+    return await MediaRepository.getSignedUrlPromise(urlParams);
   }
 }
 
