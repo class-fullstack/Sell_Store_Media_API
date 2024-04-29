@@ -1,0 +1,38 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAdminFullAccess",
+      "Effect": "Allow",
+      "Action": ["s3:*"],
+      "Resource": [
+        "arn:aws:s3:::sell-store-video/*",
+        "arn:aws:s3:::sell-store/*"
+      ]
+    },
+    {
+      "Sid": "AllowUserLimitedAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:ListMultipartUploadParts",
+        "s3:PutObject",
+        "s3:AbortMultipartUpload"
+      ],
+      "Resource": [
+        "arn:aws:s3:::sell-store-video/*",
+        "arn:aws:s3:::sell-store/*"
+      ]
+    },
+    {
+      "Sid": "AllowUserReadAccess",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": [
+        "arn:aws:s3:::sell-store-video/*",
+        "arn:aws:s3:::sell-store/*"
+      ]
+    }
+  ]
+}
