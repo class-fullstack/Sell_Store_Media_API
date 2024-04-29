@@ -1,6 +1,5 @@
 //* LIB
 const sharp = require("sharp");
-const { createCanvas } = require("canvas");
 const _ = require("lodash");
 
 //* REQUIRE
@@ -20,6 +19,12 @@ const {
 } = require("../../../commons/helpers/stringHandler");
 const { randomMediaId } = require("../../../commons/helpers/randomHandler");
 const MediaRepository = require("../../v1/models/repositories/media.repo");
+const { detectFileType } = require("../../../commons/helpers/detectHandler");
+const { createTextImage } = require("../../../commons/helpers/canvasHandler");
+const {
+  resizeImage,
+  addWatermark,
+} = require("../../../commons/helpers/sharpHandler");
 
 class MediaService {
   async uploadSingle(req) {
@@ -120,34 +125,6 @@ class MediaService {
     };
   }
 
-  async createTextImage({
-    text = "Nguyen Tien Tai",
-    font,
-    fontSize,
-    textColor,
-    canvasWidth,
-    canvasHeight,
-  }) {
-    const canvas = createCanvas(canvasWidth, canvasHeight);
-    const ctx = canvas.getContext("2d");
-
-    // Đặt font và kích thước
-    //* 1. Set font and size
-    ctx.font = `${fontSize}px ${font}`;
-    ctx.fillStyle = textColor;
-
-    //* 2. Measure size of word
-    const textMetrics = ctx.measureText(text);
-    const textWidth = textMetrics.width;
-    const textHeight = fontSize;
-
-    //* 3. Draw text to the canvas in the bottom left corner
-    ctx.fillText(text, canvasWidth - textWidth, canvasHeight - textHeight);
-
-    //* 4. convert canvas to buffer
-    return canvas.toBuffer();
-  }
-
   async processImage({
     buffer,
     mimetype,
@@ -157,27 +134,28 @@ class MediaService {
     text,
   }) {
     let processedBuffer, textBuffer;
-    if (_.includes(["image/jpeg", "image/png"], mimetype)) {
+    const fileType = detectFileType({ contentType: mimetype });
+    if (fileType !== null) {
       //* 1. Resize image to 800x600 pixels
-      processedBuffer = await sharp(buffer)
-        .resize({ width: width, height: height })
-        .toBuffer();
+      processedBuffer = await resizeImage({ buffer, height, width });
 
       //* 2.  Check if want watermark into image
       if (watermark === TYPE.TRUE && text) {
         //* 1. Draw watermark into image
-        textBuffer = await this.createTextImage({
+        textBuffer = await createTextImage({
           text: text || "Nguyen Tien Tai",
           font: "Arial",
-          fontSize: 20,
+          fontSize: 22,
           textColor: "rgba(255, 255, 255, 0.7)",
           canvasWidth: width,
           canvasHeight: height,
         });
+
         //* 2. Watermark into image
-        processedBuffer = await sharp(processedBuffer)
-          .composite([{ input: textBuffer, gravity: "southeast" }])
-          .toBuffer();
+        processedBuffer = await addWatermark({
+          buffer,
+          textBuffer,
+        });
       }
     } else {
       //* 3. If deference image return buffer

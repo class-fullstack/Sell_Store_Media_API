@@ -31,9 +31,9 @@ const FILE = {
 };
 
 const TEMPLATE = {
-  IMAGE: "${media_id}/${user_id}/${time}-${file_name}",
-  VIDEO: "${media_id}/${user_id}/${time}-${file_name}",
-  STORAGE: "data/${user_id}/origin/${file_name}",
+  IMAGE: "${user_id}/${media_id}/${time}-${file_name}",
+  VIDEO: "${user_id}/${media_id}/${time}-${file_name}",
+  STORAGE: "${user_id}/data/origin/${file_name}",
 };
 
 const MEDIA_TYPE = /jpeg|jpg|png|gif|mp3|mp4/;
