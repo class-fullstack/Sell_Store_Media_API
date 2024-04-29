@@ -1,7 +1,3 @@
-//* LIB
-const sharp = require("sharp");
-const _ = require("lodash");
-
 //* REQUIRE
 const {
   S3_BUCKET,
