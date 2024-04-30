@@ -32,5 +32,5 @@ services:
 
 ###* NETWORD GENERAL ###
 networks:
-  media-network:
+  service_media-network:
     driver: bridge
