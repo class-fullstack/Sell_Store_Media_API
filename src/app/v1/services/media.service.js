@@ -10,7 +10,7 @@ const {
   MAX_AGE,
   TYPE,
 } = require("../../../commons/constants");
-const ValidationMedia = require("../../../commons/helpers/validatehandler.js");
+const ValidationMedia = require("../../../commons/helpers/validateHandler.js");
 const {
   parseMimeType,
   getURIFromTemplate,
