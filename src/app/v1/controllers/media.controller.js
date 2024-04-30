@@ -20,6 +20,16 @@ class MediaController {
       }),
     }).send(res);
   }
+
+  async deleteObjectsFolder(req, res, ___) {
+    const { bucket, url_path } = req.query;
+    new SuccessResponse({
+      metadata: await mediaService.deleteObjectsFolder({
+        s3Bucket: bucket,
+        urlPath: url_path,
+      }),
+    }).send(res);
+  }
 }
 
 module.exports = new MediaController();

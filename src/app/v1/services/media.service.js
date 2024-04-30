@@ -17,6 +17,7 @@ const {
   convertMetadataToString,
   getFileNameFromPath,
   cutStringFromChar,
+  extractFolderName,
 } = require("../../../commons/helpers/stringHandler");
 const { randomMediaId } = require("../../../commons/helpers/randomHandler");
 const MediaRepository = require("../../v1/models/repositories/media.repo");
@@ -96,13 +97,12 @@ class MediaService {
     const processedBuffer = await this.processImage({
       buffer,
       mimetype,
-      width: width ?? 1024,
-      height: height ?? 1024,
+      width: Number(width ?? 1024),
+      height: Number(height ?? 1024),
       watermark,
       text,
       s3Bucket,
     });
-    console.log(getFileNameFromPath(originalname), "---");
 
     //* 10. Upload file to S3
     const params = {
@@ -142,7 +142,6 @@ class MediaService {
     text,
     s3Bucket,
   }) {
-    console.log(width, height);
     let processedBuffer, textBuffer;
 
     //* 1. Get File type => image/jpeg,...
@@ -349,6 +348,35 @@ class MediaService {
       contentType: ContentType,
       buffer: Buffer.from(Body),
     };
+  }
+
+  async deleteObjectsFolder({ s3Bucket, urlPath }) {
+    const getFolder = extractFolderName({ url: urlPath });
+
+    console.log(getFolder);
+
+    const objectFolderToDelete =
+      await MediaRepository.getAllImageInfoFromBucket({
+        Bucket: s3Bucket,
+        Prefix: getFolder,
+      });
+
+    console.log(objectFolderToDelete);
+    const deleteRequests = objectFolderToDelete.map((obj) => ({
+      Key: obj.Key,
+    }));
+    deleteRequests.push({ Key: getFolder });
+
+    const params = {
+      Bucket: s3Bucket,
+      Delete: {
+        Objects: deleteRequests,
+      },
+    };
+
+    const resultDelete = await MediaRepository.deleteObjects(params);
+
+    return resultDelete;
   }
 }
 

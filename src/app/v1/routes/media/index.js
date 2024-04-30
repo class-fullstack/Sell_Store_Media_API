@@ -24,10 +24,16 @@ router.post(
   asyncHandler(mediaController.processAndUploadSingleMedia)
 );
 
-//* 2. Get
+//* 2. Get flow keys of image and video, if image it will have resize image
 router.get(
   "/generate-signed-url",
   asyncHandler(mediaController.generateSignedUrlResponse)
+);
+
+//* 3. Delete object link folders
+router.get(
+  "/delete-folder-link",
+  asyncHandler(mediaController.deleteObjectsFolder)
 );
 
 module.exports = router;

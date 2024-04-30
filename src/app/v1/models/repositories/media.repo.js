@@ -24,7 +24,6 @@ class MediaRepository {
   async getAllImageInfoFromBucket(params) {
     try {
       const data = await awsBucket.listObjects(params).promise();
-      console.info("Objects in bucket:", data.Contents);
       return data.Contents;
     } catch (_) {
       throw new InternalServerError();
@@ -33,8 +32,15 @@ class MediaRepository {
 
   async getObjectInfoByKey(params) {
     try {
-      const data = await awsBucket.getObject(params).promise();
-      return data;
+      return await awsBucket.getObject(params).promise();
+    } catch (_) {
+      throw new InternalServerError();
+    }
+  }
+
+  async deleteObjects(params) {
+    try {
+      return await awsBucket.deleteObjects(params).promise();
     } catch (_) {
       throw new InternalServerError();
     }
