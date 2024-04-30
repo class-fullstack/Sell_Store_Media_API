@@ -351,9 +351,8 @@ class MediaService {
   }
 
   async deleteObjectsFolder({ s3Bucket, urlPath }) {
+    //* 1 . Extract folder for keys
     const getFolder = extractFolderName({ url: urlPath });
-
-    console.log(getFolder);
 
     const objectFolderToDelete =
       await MediaRepository.getAllImageInfoFromBucket({
@@ -361,21 +360,22 @@ class MediaService {
         Prefix: getFolder,
       });
 
-    console.log(objectFolderToDelete);
+    //* 2. Map all keys into arrays
     const deleteRequests = objectFolderToDelete.map((obj) => ({
       Key: obj.Key,
     }));
     deleteRequests.push({ Key: getFolder });
 
+    //* 3. Handle Delete all keys in that folders
     const params = {
       Bucket: s3Bucket,
       Delete: {
         Objects: deleteRequests,
       },
     };
-
     const resultDelete = await MediaRepository.deleteObjects(params);
 
+    // * 4. return folder did delete successfully
     return resultDelete;
   }
 }
