@@ -8,16 +8,40 @@ class MediaRepository {
   async putObject(params) {
     try {
       return await awsBucket.putObject(params).promise();
-    } catch (_) {
+    } catch (error) {
+      console.log(error);
       throw new InternalServerError();
     }
   }
 
-  async getSignedUrlPromise(urlParams) {
+  async getSignedUrlPromise(params) {
     try {
-      return await awsBucket.getSignedUrlPromise("getObject", urlParams);
-    } catch (_) {
+      return await awsBucket.getSignedUrlPromise("getObject", params);
+    } catch (error) {
+      console.log(error);
+
       throw new InternalServerError();
+    }
+  }
+
+  async getAllImageInfoFromBucket(params) {
+    try {
+      const data = await awsBucket.listObjects(params).promise();
+      console.info("Objects in bucket:", data.Contents);
+      return data.Contents;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerError();
+    }
+  }
+
+  async getObjectInfoByKey(params) {
+    try {
+      const data = await awsBucket.getObject(params).promise();
+      return data;
+    } catch (error) {
+      console.error("Error getting object:", error);
+      throw error;
     }
   }
 }

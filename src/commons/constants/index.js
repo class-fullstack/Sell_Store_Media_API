@@ -31,9 +31,9 @@ const FILE = {
 };
 
 const TEMPLATE = {
-  IMAGE: "${user_id}/${media_id}/${time}-${file_name}",
-  VIDEO: "${user_id}/${media_id}/${time}-${file_name}",
-  STORAGE: "${user_id}/data/origin/${file_name}",
+  IMAGE: "${user_id}/${media_id}/${file_name}",
+  VIDEO: "${user_id}/${media_id}/${file_name}",
+  RESIZE: "${user_id}/${media_id}/resize/${file_name}?w=${width}&h=${height}",
 };
 
 const MEDIA_TYPE = /jpeg|jpg|png|gif|mp3|mp4/;
@@ -56,7 +56,7 @@ const VALIDATE = {
 
 const TYPE = {
   TRUE: "1",
-  false: "2",
+  FALSE: "0",
 };
 
 module.exports = {

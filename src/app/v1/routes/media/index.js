@@ -17,10 +17,17 @@ router.use(UserTrackingMiddleware.checkTracking);
 //* Check accessToken of users
 router.use(AuthMiddleware.checkToken);
 
+//* 1. Upload single media
 router.post(
   "/upload-single",
   uploadMemory.single(KEY_UPLOAD.SINGLE, MAX_MEDIA),
-  asyncHandler(mediaController.uploadSingle)
+  asyncHandler(mediaController.processAndUploadSingleMedia)
+);
+
+//* 2. Get
+router.get(
+  "/generate-signed-url",
+  asyncHandler(mediaController.generateSignedUrlResponse)
 );
 
 module.exports = router;

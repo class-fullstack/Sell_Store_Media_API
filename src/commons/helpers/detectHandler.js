@@ -12,8 +12,6 @@ const detectFileType = ({ contentType }) => {
     ],
   };
 
-  console.log(contentType);
-
   for (const type in FILE_TYPES) {
     if (FILE_TYPES[type].includes(contentType)) {
       return type;

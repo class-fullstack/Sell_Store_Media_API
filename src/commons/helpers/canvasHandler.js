@@ -12,7 +12,6 @@ const createTextImage = ({
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const ctx = canvas.getContext("2d");
 
-  // Đặt font và kích thước
   //* 1. Set font and size
   ctx.font = `${fontSize}px ${font}`;
   ctx.fillStyle = textColor;
