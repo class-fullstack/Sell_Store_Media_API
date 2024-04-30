@@ -8,8 +8,7 @@ class MediaRepository {
   async putObject(params) {
     try {
       return await awsBucket.putObject(params).promise();
-    } catch (error) {
-      console.log(error);
+    } catch (_) {
       throw new InternalServerError();
     }
   }
@@ -17,9 +16,7 @@ class MediaRepository {
   async getSignedUrlPromise(params) {
     try {
       return await awsBucket.getSignedUrlPromise("getObject", params);
-    } catch (error) {
-      console.log(error);
-
+    } catch (_) {
       throw new InternalServerError();
     }
   }
@@ -29,8 +26,7 @@ class MediaRepository {
       const data = await awsBucket.listObjects(params).promise();
       console.info("Objects in bucket:", data.Contents);
       return data.Contents;
-    } catch (error) {
-      console.log(error);
+    } catch (_) {
       throw new InternalServerError();
     }
   }
@@ -39,9 +35,8 @@ class MediaRepository {
     try {
       const data = await awsBucket.getObject(params).promise();
       return data;
-    } catch (error) {
-      console.error("Error getting object:", error);
-      throw error;
+    } catch (_) {
+      throw new InternalServerError();
     }
   }
 }

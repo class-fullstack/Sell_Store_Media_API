@@ -5,7 +5,7 @@ const _ = require("lodash");
 const { verifyToken } = require("../auth/token.auth");
 const { ROLE_TYPE, VALIDATE } = require("../commons/constants");
 const { getInfoHeaders } = require("../commons/helpers/headerHandler");
-const { isTokenExpired } = require("../commons/helpers/timeHandle");
+const { isTokenExpired } = require("../commons/helpers/timeHandler");
 const { UnauthorizedError } = require("../cores/error.response");
 
 class AuthMiddleware {
