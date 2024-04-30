@@ -40,6 +40,9 @@ router.get(
 router.get("/delete-link", asyncHandler(mediaController.deleteS3Object));
 
 //* 5. Get object Metadata
-router.get("/metadata", asyncHandler(mediaController.getMetadataS3Object));
+router.get("/info-metadata", asyncHandler(mediaController.getMetadataS3Object));
+
+//* 6. Get all buckets
+router.get("/get-buckets", asyncHandler(mediaController.getAllMediaInfo));
 
 module.exports = router;

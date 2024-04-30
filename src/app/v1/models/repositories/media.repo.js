@@ -25,8 +25,8 @@ class MediaRepository {
     try {
       const data = await awsBucket.listObjects(params).promise();
       return data.Contents;
-    } catch (_) {
-      throw new BadRequestRequestError();
+    } catch (error) {
+      throw new BadRequestRequestError(error);
     }
   }
 
@@ -51,6 +51,15 @@ class MediaRepository {
       return await awsBucket.headObject(params).promise();
     } catch (_) {
       throw new BadRequestRequestError();
+    }
+  }
+
+  async getAllImageInfoFromBucketV2(params) {
+    try {
+      const data = await awsBucket.listObjectsV2(params).promise();
+      return data;
+    } catch (error) {
+      throw new BadRequestRequestError(error);
     }
   }
 }

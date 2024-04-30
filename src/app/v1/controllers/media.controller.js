@@ -30,6 +30,7 @@ class MediaController {
       }),
     }).send(res);
   }
+
   async deleteS3Object(req, res, ___) {
     const { bucket, url_path } = req.query;
     new SuccessResponse({
@@ -43,9 +44,21 @@ class MediaController {
   async getMetadataS3Object(req, res, ___) {
     const { bucket, url_path } = req.query;
     new SuccessResponse({
-      metadata: await mediaService.getAllObjectMetadata({
+      metadata: await mediaService.getObjectInfoMetadata({
         s3Bucket: bucket,
         urlPath: url_path,
+      }),
+    }).send(res);
+  }
+
+  async getAllMediaInfo(req, res, ___) {
+    const { bucket, prefix, delimiter, maxKeys } = req.query;
+    new SuccessResponse({
+      metadata: await mediaService.getAllMediaInfo({
+        s3Bucket: bucket,
+        prefix,
+        delimiter,
+        maxKeys,
       }),
     }).send(res);
   }

@@ -409,7 +409,7 @@ class MediaService {
     return resultDelete;
   }
 
-  async getAllObjectMetadata({ s3Bucket, urlPath }) {
+  async getObjectInfoMetadata({ s3Bucket, urlPath }) {
     //* 1.  Validate query parameters
     ValidationMedia.validateFields({
       s3Bucket,
@@ -425,6 +425,30 @@ class MediaService {
 
     // * 3. Return metadata successfully
     return resultMetadata;
+  }
+
+  async getAllMediaInfo({ s3Bucket, prefix = "", maxKeys = 100 }) {
+    //* 1.  Validate query parameters
+    ValidationMedia.validateFields({
+      s3Bucket,
+    });
+
+    //* 2. Create params object
+    const params = {
+      Bucket: s3Bucket,
+      Prefix: prefix, // Filter objects by prefix
+      MaxKeys: maxKeys, // Maximum number of keys to return
+      FetchOwner: true, // Include the owner information for each object
+    };
+    const { KeyCount, Contents, Name } =
+      await MediaRepository.getAllImageInfoFromBucketV2(params);
+
+    //* 3. Return result object
+    return {
+      count: KeyCount,
+      bucket: Name,
+      data: Contents,
+    };
   }
 }
 
