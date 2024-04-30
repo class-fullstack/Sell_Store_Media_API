@@ -36,4 +36,10 @@ router.get(
   asyncHandler(mediaController.deleteObjectsFolder)
 );
 
+//* 4. Delete object link key
+router.get("/delete-link", asyncHandler(mediaController.deleteS3Object));
+
+//* 5. Get object Metadata
+router.get("/metadata", asyncHandler(mediaController.getMetadataS3Object));
+
 module.exports = router;

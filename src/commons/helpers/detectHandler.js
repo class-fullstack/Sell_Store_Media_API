@@ -1,3 +1,5 @@
+"use strict";
+
 const detectFileType = ({ contentType }) => {
   const FILE_TYPES = {
     IMAGE: ["image/jpeg", "image/png", "image/gif", "image/webp"],

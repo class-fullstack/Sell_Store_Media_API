@@ -1,3 +1,5 @@
+"use strict";
+
 //* REQUIRE
 const { StatusCodes, ReasonPhrases } = require("../utils/httpStatusCode");
 

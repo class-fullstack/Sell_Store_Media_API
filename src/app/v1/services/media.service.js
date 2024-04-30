@@ -351,7 +351,13 @@ class MediaService {
   }
 
   async deleteObjectsFolder({ s3Bucket, urlPath }) {
-    //* 1 . Extract folder for keys
+    //* 1.  Validate query parameters
+    ValidationMedia.validateFields({
+      s3Bucket,
+      urlPath,
+    });
+
+    //* 2 . Extract folder for keys
     const getFolder = extractFolderName({ url: urlPath });
 
     const objectFolderToDelete =
@@ -360,13 +366,13 @@ class MediaService {
         Prefix: getFolder,
       });
 
-    //* 2. Map all keys into arrays
+    //* 3. Map all keys into arrays
     const deleteRequests = objectFolderToDelete.map((obj) => ({
       Key: obj.Key,
     }));
     deleteRequests.push({ Key: getFolder });
 
-    //* 3. Handle Delete all keys in that folders
+    //* 4. Handle Delete all keys in that folders
     const params = {
       Bucket: s3Bucket,
       Delete: {
@@ -377,6 +383,48 @@ class MediaService {
 
     // * 4. return folder did delete successfully
     return resultDelete;
+  }
+
+  async deleteS3Object({ s3Bucket, urlPath }) {
+    //* 1.  Validate query parameters
+    ValidationMedia.validateFields({
+      s3Bucket,
+      urlPath,
+    });
+
+    //* 2. Handle Delete all keys in that folders
+    const params = {
+      Bucket: s3Bucket,
+      Delete: {
+        Objects: [
+          {
+            Key: urlPath,
+          },
+        ],
+      },
+    };
+    const resultDelete = await MediaRepository.deleteObjects(params);
+
+    // * 4. return folder did delete successfully
+    return resultDelete;
+  }
+
+  async getAllObjectMetadata({ s3Bucket, urlPath }) {
+    //* 1.  Validate query parameters
+    ValidationMedia.validateFields({
+      s3Bucket,
+      urlPath,
+    });
+
+    //* 2. Create params object
+    const params = {
+      Bucket: s3Bucket,
+      Key: urlPath,
+    };
+    const resultMetadata = await MediaRepository.getHeadObject(params);
+
+    // * 3. Return metadata successfully
+    return resultMetadata;
   }
 }
 

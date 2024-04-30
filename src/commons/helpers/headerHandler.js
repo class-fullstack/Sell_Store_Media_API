@@ -1,3 +1,5 @@
+"use strict";
+
 const getHeader = (headers, key) => {
   if (headers) {
     return headers[key.toLowerCase()];

@@ -45,5 +45,13 @@ class MediaRepository {
       throw new BadRequestRequestError();
     }
   }
+
+  async getHeadObject(params) {
+    try {
+      return await awsBucket.headObject(params).promise();
+    } catch (_) {
+      throw new BadRequestRequestError();
+    }
+  }
 }
 module.exports = new MediaRepository();

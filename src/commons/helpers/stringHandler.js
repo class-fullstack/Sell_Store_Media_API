@@ -1,3 +1,5 @@
+"use strict";
+
 //* LIB
 const _ = require("lodash");
 

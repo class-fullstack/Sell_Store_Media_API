@@ -1,3 +1,5 @@
+"use strict";
+
 //* LIB
 const sharp = require("sharp");
 
