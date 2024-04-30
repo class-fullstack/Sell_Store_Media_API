@@ -11,12 +11,13 @@ const URL_PG = `postgresql://${user}:${password}@${host}:${port}/${database}`;
 
 const client = {};
 let connectTimeout;
+const TIMEOUT_DURATION_MS = 10000; // 10 seconds
 
 const handleTimeoutError = () => {
   connectTimeout = setTimeout(() => {
     console.error("Failed to connect to PostgreSQL database");
     throw new Error("Failed to connect to PostgreSQL database");
-  }, 10000);
+  }, TIMEOUT_DURATION_MS);
 };
 
 const handleEventConnect = ({ connection }) => {

@@ -35,6 +35,7 @@ app.use(
 
 //* PG
 require("./dbs/init.knex").initDatabase();
+require("./dbs/init.minio").initAwsBucket();
 
 // * V1
 app.use("/api/v1", require("./app/v1/routes"));
