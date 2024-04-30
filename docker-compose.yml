@@ -1,24 +1,23 @@
 version: "3.8"
 
 services:
-  media_api:
-    container_name: media_api
+  service:
+    container_name: service_media_api
     restart: always
     build:
       context: .
       dockerfile: ./docker/dev/Dockerfile.dev
     environment:
-      NODE_ENV: developer
+      NODE_ENV: DEV
       NODE_OPTIONS: "--max-old-space-size=512"
     ports:
-      - "${PORT_PUBLIC}:${PORT_PRIVATE}"
+      - "${PORT}:${PORT}"
     volumes:
       - "./src:/usr/src/app/src:ro"
     env_file:
       - .env
-    command: npm run dev
     networks:
-      - media-network
+      - service_media-network
     # healthcheck:
     #   test:
     #     [

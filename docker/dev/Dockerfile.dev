@@ -1,5 +1,4 @@
-# Image from Docker Hub
-FROM node:20-alpine 
+FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
@@ -10,3 +9,6 @@ RUN apk add --no-cache curl \
     && npm cache clean --force
 
 COPY . . 
+
+# Command run applycation
+CMD ["yarn", "dev"]
