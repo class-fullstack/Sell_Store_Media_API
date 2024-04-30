@@ -1,0 +1,413 @@
+{
+	"info": {
+		"_postman_id": "b753da35-bedb-46ea-b484-df85ebff447a",
+		"name": "Sell-Store-Media",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17440086",
+		"_collection_link": "https://www.postman.com/nguyentientai/workspace/class-fullstack/collection/17440086-b753da35-bedb-46ea-b484-df85ebff447a?action=share&source=collection_link&creator=17440086"
+	},
+	"item": [
+		{
+			"name": "upload-single",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"key_path_media\", pm.response.json().metadata.urlPath);",
+							"pm.globals.set(\"s3_bucket\", pm.response.json().metadata.s3_bucket);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-DEVICE-ID",
+						"value": "{{device_id_user}}",
+						"type": "text"
+					},
+					{
+						"key": "X-FIREBASE-DEVICE-ID",
+						"value": "{{firebase_device_id_user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image-single",
+							"type": "file",
+							"src": "/home/fdhhhdjd/Downloads/tai.jpg"
+						},
+						{
+							"key": "width",
+							"value": "800",
+							"type": "text"
+						},
+						{
+							"key": "height",
+							"value": "600",
+							"type": "text"
+						},
+						{
+							"key": "watermark",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "text",
+							"value": "fdhhhdjd",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url_sell_store_media}}/v1/media/upload-single",
+					"host": [
+						"{{url_sell_store_media}}"
+					],
+					"path": [
+						"v1",
+						"media",
+						"upload-single"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Folder Link",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-DEVICE-ID",
+						"value": "{{device_id_user}}",
+						"type": "text"
+					},
+					{
+						"key": "X-FIREBASE-DEVICE-ID",
+						"value": "{{firebase_device_id_user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{url_sell_store_media}}/v1/media/delete-folder-link?bucket={{s3_bucket}}&url_path={{key_path_media}}",
+					"host": [
+						"{{url_sell_store_media}}"
+					],
+					"path": [
+						"v1",
+						"media",
+						"delete-folder-link"
+					],
+					"query": [
+						{
+							"key": "bucket",
+							"value": "{{s3_bucket}}"
+						},
+						{
+							"key": "url_path",
+							"value": "{{key_path_media}}"
+						},
+						{
+							"key": "width",
+							"value": "600",
+							"disabled": true
+						},
+						{
+							"key": "height",
+							"value": "600",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Link",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-DEVICE-ID",
+						"value": "{{device_id_user}}",
+						"type": "text"
+					},
+					{
+						"key": "X-FIREBASE-DEVICE-ID",
+						"value": "{{firebase_device_id_user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{url_sell_store_media}}/v1/media/delete-link?bucket={{s3_bucket}}&url_path={{key_path_media}}",
+					"host": [
+						"{{url_sell_store_media}}"
+					],
+					"path": [
+						"v1",
+						"media",
+						"delete-link"
+					],
+					"query": [
+						{
+							"key": "bucket",
+							"value": "{{s3_bucket}}"
+						},
+						{
+							"key": "url_path",
+							"value": "{{key_path_media}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Metadata",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-DEVICE-ID",
+						"value": "{{device_id_user}}",
+						"type": "text"
+					},
+					{
+						"key": "X-FIREBASE-DEVICE-ID",
+						"value": "{{firebase_device_id_user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{url_sell_store_media}}/v1/media/get-buckets?bucket={{s3_bucket}}&prefix=13/&maxKeys=100",
+					"host": [
+						"{{url_sell_store_media}}"
+					],
+					"path": [
+						"v1",
+						"media",
+						"get-buckets"
+					],
+					"query": [
+						{
+							"key": "bucket",
+							"value": "{{s3_bucket}}"
+						},
+						{
+							"key": "prefix",
+							"value": "13/"
+						},
+						{
+							"key": "maxKeys",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Metadata Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-DEVICE-ID",
+						"value": "{{device_id_user}}",
+						"type": "text"
+					},
+					{
+						"key": "X-FIREBASE-DEVICE-ID",
+						"value": "{{firebase_device_id_user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{url_sell_store_media}}/v1/media/delete-link?bucket={{s3_bucket}}&url_path={{key_path_media}}",
+					"host": [
+						"{{url_sell_store_media}}"
+					],
+					"path": [
+						"v1",
+						"media",
+						"delete-link"
+					],
+					"query": [
+						{
+							"key": "bucket",
+							"value": "{{s3_bucket}}"
+						},
+						{
+							"key": "url_path",
+							"value": "{{key_path_media}}"
+						},
+						{
+							"key": "width",
+							"value": "600",
+							"disabled": true
+						},
+						{
+							"key": "height",
+							"value": "600",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Signed Url Response Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-DEVICE-ID",
+						"value": "{{device_id_user}}",
+						"type": "text"
+					},
+					{
+						"key": "X-FIREBASE-DEVICE-ID",
+						"value": "{{firebase_device_id_user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{url_sell_store_media}}/v1/media/generate-signed-url?bucket={{s3_bucket}}&url_path={{key_path_media}}&width=600&height=600",
+					"host": [
+						"{{url_sell_store_media}}"
+					],
+					"path": [
+						"v1",
+						"media",
+						"generate-signed-url"
+					],
+					"query": [
+						{
+							"key": "bucket",
+							"value": "{{s3_bucket}}"
+						},
+						{
+							"key": "url_path",
+							"value": "{{key_path_media}}"
+						},
+						{
+							"key": "width",
+							"value": "600"
+						},
+						{
+							"key": "height",
+							"value": "600"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
