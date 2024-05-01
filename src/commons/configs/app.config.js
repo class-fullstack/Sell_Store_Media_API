@@ -1,6 +1,6 @@
 const DEV = {
   app: {
-    port: process.env.PORT_PRIVATE,
+    port: process.env.PORT,
     morgan: process.env.MORGAN || "dev",
     node: process.env.NODE_ENV,
     web_server: process.env.WEB_SERVER,
@@ -9,7 +9,7 @@ const DEV = {
 };
 const PRO = {
   app: {
-    port: process.env.PORT_PRIVATE || 5000,
+    port: process.env.PORT || 5000,
     morgan: process.env.MORGAN || "combined",
     node: process.env.NODE_ENV,
     web_server: process.env.WEB_SERVER,
