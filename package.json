@@ -4,11 +4,11 @@
   "description": "",
   "main": "server.js",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "scripts": {
-    "dev": "nodemon server.js",
-    "node": "node --watch server.js",
+    "dev": "node --watch server.js",
+    "node": "nodemon server.js",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,9 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.12.10",
     "aws-sdk": "^2.1598.0",
-    "bcrypt": "^5.1.1",
     "canvas": "^2.11.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
