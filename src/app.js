@@ -47,7 +47,7 @@ app.use((_, __, next) => {
 });
 
 app.use((error, __, res, ____) => {
-  const checkNodeApp = "dev" === NODE_ENV.DEV;
+  const checkNodeApp = process.env.NODE_ENV === NODE_ENV.DEV;
   try {
     const resultError = errorHandler(error, checkNodeApp);
 
