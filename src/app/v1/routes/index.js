@@ -9,11 +9,6 @@ const {
 const HeaderMiddleware = require("../../../middlewares/headers.middleware");
 const router = express.Router();
 
-//* Get all headers
-router.use(HeaderMiddleware.getHeaders);
-
-router.use("/media", require("./media"));
-
 router.get("/", async (_, res, __) => {
   const healthCheck = {
     uptime: process.uptime(),
@@ -22,5 +17,10 @@ router.get("/", async (_, res, __) => {
   };
   return res.status(StatusCodes.OK).json(healthCheck);
 });
+
+//* Get all headers
+router.use(HeaderMiddleware.getHeaders);
+
+router.use("/media", require("./media"));
 
 module.exports = router;
