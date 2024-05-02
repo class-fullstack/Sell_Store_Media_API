@@ -19,10 +19,12 @@ const S3_BUCKET = {
   VIDEO: "sell-store-video",
 };
 const MAX_MEDIA = 1;
+const MAX_MEDIA_MULTIPLE = 5;
 const MAX_UPLOAD_MULTIPLE = 10;
 const MAX_AGE = 3600;
 const KEY_UPLOAD = {
   SINGLE: "image-single",
+  MULTIPLE: "image-multiple",
 };
 
 const FILE = {
@@ -75,4 +77,5 @@ module.exports = {
   TABLES,
   VALIDATE,
   TYPE,
+  MAX_MEDIA_MULTIPLE,
 };

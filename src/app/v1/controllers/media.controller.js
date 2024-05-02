@@ -62,6 +62,12 @@ class MediaController {
       }),
     }).send(res);
   }
+
+  async putObjectS3Multiple(req, res, ___) {
+    new SuccessResponse({
+      metadata: await mediaService.putObjectS3Multiple(req),
+    }).send(res);
+  }
 }
 
 module.exports = new MediaController();

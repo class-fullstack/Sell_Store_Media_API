@@ -52,7 +52,7 @@
 						{
 							"key": "image-single",
 							"type": "file",
-							"src": "/home/fdhhhdjd/Downloads/tai.jpg"
+							"src": "/home/fdhhhdjd/Downloads/Redis.jpg"
 						},
 						{
 							"key": "width",
@@ -79,14 +79,103 @@
 					]
 				},
 				"url": {
-					"raw": "{{url_sell_store_media}}/v1/media/upload-single",
+					"raw": "{{url_sell_store_media}}/v1/media/upload-multiple",
 					"host": [
 						"{{url_sell_store_media}}"
 					],
 					"path": [
 						"v1",
 						"media",
-						"upload-single"
+						"upload-multiple"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload-multipe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"key_path_media\", pm.response.json().metadata.urlPath);",
+							"pm.globals.set(\"s3_bucket\", pm.response.json().metadata.s3_bucket);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-DEVICE-ID",
+						"value": "{{device_id_user}}",
+						"type": "text"
+					},
+					{
+						"key": "X-FIREBASE-DEVICE-ID",
+						"value": "{{firebase_device_id_user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image-multiple",
+							"type": "file",
+							"src": [
+								"/home/fdhhhdjd/Downloads/tai.jpg",
+								"/home/fdhhhdjd/Downloads/sieunhan.jpeg",
+								"/home/fdhhhdjd/Downloads/circle.png"
+							]
+						},
+						{
+							"key": "width",
+							"value": "800",
+							"type": "text"
+						},
+						{
+							"key": "height",
+							"value": "600",
+							"type": "text"
+						},
+						{
+							"key": "watermark",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "text",
+							"value": "fdhhhdjd",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url_sell_store_media}}/v1/media/upload-multiple",
+					"host": [
+						"{{url_sell_store_media}}"
+					],
+					"path": [
+						"v1",
+						"media",
+						"upload-multiple"
 					]
 				}
 			},
@@ -278,7 +367,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Metadata Copy",
+			"name": "Delete Link",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},

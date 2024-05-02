@@ -450,6 +450,20 @@ class MediaService {
       data: Contents,
     };
   }
+
+  async putObjectS3Multiple(req) {
+    if (_.isEmpty(req?.files)) {
+      return new BadRequestRequestError();
+    }
+
+    const promises = req?.files.map(async (file) => {
+      return await this.processAndUploadSingleMedia({ ...req, file });
+    });
+
+    const uploadResults = await Promise.all(promises);
+    console.log("All images uploaded successfully");
+    return uploadResults;
+  }
 }
 
 module.exports = new MediaService();

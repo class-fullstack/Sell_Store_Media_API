@@ -5,7 +5,11 @@ const express = require("express");
 const mediaController = require("../../controllers/media.controller");
 const { asyncHandler } = require("../../../../commons/helpers/asyncHandler");
 const { uploadMemory } = require("../../../../commons/configs/multer.config");
-const { MAX_MEDIA, KEY_UPLOAD } = require("../../../../commons/constants");
+const {
+  MAX_MEDIA,
+  KEY_UPLOAD,
+  MAX_MEDIA_MULTIPLE,
+} = require("../../../../commons/constants");
 const UserTrackingMiddleware = require("../../../../middlewares/tracking.middleware");
 const AuthMiddleware = require("../../../../middlewares/authentication.middleware");
 
@@ -44,5 +48,12 @@ router.get("/info-metadata", asyncHandler(mediaController.getMetadataS3Object));
 
 //* 6. Get all buckets
 router.get("/get-buckets", asyncHandler(mediaController.getAllMediaInfo));
+
+//* 7. Upload multiple media
+router.post(
+  "/upload-multiple",
+  uploadMemory.array(KEY_UPLOAD.MULTIPLE, MAX_MEDIA_MULTIPLE),
+  asyncHandler(mediaController.putObjectS3Multiple)
+);
 
 module.exports = router;
