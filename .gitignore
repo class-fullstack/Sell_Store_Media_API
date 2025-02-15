@@ -1,4 +1,5 @@
 node_modules
 src/logs
 yarn.lock
-firebaseConfig.json
+firesbaseConfig.json
+.env

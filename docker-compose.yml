@@ -24,6 +24,35 @@ services:
       timeout: 2s
       retries: 3
 
+  minio:
+    container_name: minio
+    image: minio/minio:latest
+    restart: always
+    volumes:
+      - minio_data:/minio-data/data
+    ports:
+      - "${S3_ADMIN_PORT}:${S3_ADMIN_PORT}"
+      - "${S3_WEB_PORT}:${S3_WEB_PORT}"
+    environment:
+      ## Username and password must have 8 characters
+      MINIO_ROOT_USER: "${S3_USERNAME}"
+      MINIO_ROOT_PASSWORD: "${S3_PASSWORD}"
+      MINIO_BROWSER: "${MINIO_BROWSER}"
+    command: server /minio-data/data --address ":${S3_ADMIN_PORT}" --console-address ":${S3_WEB_PORT}"
+    networks:
+      - service_media-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:${S3_ADMIN_PORT}/minio/health/live",
+        ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
 ###* NETWORD GENERAL ###
 networks:
   service_media-network:
